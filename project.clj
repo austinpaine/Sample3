@@ -13,6 +13,8 @@
                  [com.google.javascript/closure-compiler-unshaded "v20200504" :scope "provided"]
                  [cprop "0.1.17"]
                  [day8.re-frame/http-fx "0.1.6"]
+                 [day8.re-frame/re-frame-10x "0.4.3"]
+                 [day8.re-frame/tracing "0.5.3"]
                  [expound "0.8.5"]
                  [funcool/struct "1.4.0"]
                  [luminus-transit "0.1.2"]

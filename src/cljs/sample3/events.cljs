@@ -1,11 +1,35 @@
 (ns sample3.events
   (:require
     [re-frame.core :as rf]
+    [day8.re-frame.tracing :refer-macros [fn-traced]]
     [ajax.core :as ajax]
     [reitit.frontend.easy :as rfe]
     [reitit.frontend.controllers :as rfc]))
 
+
+
+
+
+
 ;;dispatchers
+
+
+
+(rf/reg-event-db
+  :init-db
+  (fn-traced
+    [db [_ key data]]
+    (assoc db key data)))
+
+(rf/reg-event-db
+  :set-key
+  (fn-traced
+    [db [_ idx k val]]
+    (prn ":set-key" idx k val)
+    (assoc-in db [:equations idx k] val)))
+
+(rf/dispatch [:set-key 1 :x 33])
+
 
 (rf/reg-event-db
   :common/navigate
@@ -48,7 +72,33 @@
   (fn [_ _]
     {:dispatch [:fetch-docs]}))
 
+
+
+
+
+
+
+
+
 ;;subscriptions
+
+
+(rf/reg-sub
+  :equations
+  (fn [db _]
+    (-> db :equations)))
+
+@(rf/subscribe [:equations])
+
+
+(rf/reg-sub
+  :one-equation
+  (fn [db [_ idx]]
+    (get (-> db :equations) idx)))
+
+@(rf/subscribe [:one-equation 0])
+
+
 
 (rf/reg-sub
   :common/route

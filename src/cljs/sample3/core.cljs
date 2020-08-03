@@ -40,10 +40,14 @@
   [:section.section>div.container>div.content
    [:img {:src "/img/warning_clojure.png"}]])
 
+
+(defonce equations [{:x 4 :y 6 :op "+" :total 10}
+                    {:x 5 :y 7 :op "=" :total 12}])
+(def equation1 {:x 7 :y 8})
+
 (defn home-page []
-  [:section.section>div.container>div.content
-   (when-let [docs @(rf/subscribe [:docs])]
-     [:div {:dangerouslySetInnerHTML {:__html (md->html docs)}}])])
+  [:h1 "My Homepage"]
+  [:input {:placeholder (:x @(rf/subscribe [:one-equation 0]))}])
 
 (defn page []
   (if-let [page @(rf/subscribe [:common/page])]
@@ -57,8 +61,7 @@
 (def router
   (reitit/router
     [["/" {:name        :home
-           :view        #'home-page
-           :controllers [{:start (fn [_] (rf/dispatch [:page/init-home]))}]}]
+           :view        #'home-page}]
      ["/about" {:name :about
                 :view #'about-page}]]))
 
@@ -76,5 +79,7 @@
 
 (defn init! []
   (start-router!)
+  (rf/dispatch-sync [:init-db :equations equations])
+
   (ajax/load-interceptors!)
   (mount-components))
