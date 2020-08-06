@@ -30,6 +30,20 @@
 
 (rf/dispatch [:set-key 1 :x 33])
 
+(rf/reg-event-db
+  :add-eq
+  (fn-traced
+    [db [_ k val]]
+    (assoc db k val)))
+
+(rf/reg-event-db
+  :update-eq
+  (fn-traced
+    [db [_ eq k val]]
+    (assoc-in db [eq k] val)))
+
+(rf/dispatch [:add-eq :equation1 {:x 5 :y 2 :op "-" :total 3}])
+(rf/dispatch [:update-eq :equation1 :y 4])
 
 (rf/reg-event-db
   :common/navigate
@@ -88,7 +102,9 @@
   (fn [db _]
     (-> db :equations)))
 
-@(rf/subscribe [:equations])
+(comment
+  @(rf/subscribe [:equations]))
+
 
 
 (rf/reg-sub
@@ -97,6 +113,15 @@
     (get (-> db :equations) idx)))
 
 @(rf/subscribe [:one-equation 0])
+
+(rf/reg-sub
+  :get-eq
+  (fn [db [_ eq]]
+    (eq db)))  ;; eq will be a key, and the db is just a big map
+               ;; so I can use the standard (:key {map}) notation
+               ;; to get the value I want out  (-> db eq) would also work
+
+@(rf/subscribe [:get-eq :equation1])
 
 
 

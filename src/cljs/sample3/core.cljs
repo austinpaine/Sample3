@@ -46,8 +46,7 @@
 (def equation1 {:x 7 :y 8})
 
 (defn home-page []
-  [:h1 "My Homepage"]
-  [:input {:placeholder (:x @(rf/subscribe [:one-equation 0]))}])
+  [:h1 (str @(rf/subscribe [:equations]))])
 
 (defn page []
   (if-let [page @(rf/subscribe [:common/page])]
