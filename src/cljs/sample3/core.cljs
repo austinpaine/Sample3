@@ -43,10 +43,13 @@
 
 (defonce equations [{:x 4 :y 6 :op "+" :total 10}
                     {:x 5 :y 7 :op "=" :total 12}])
-(def equation1 {:x 7 :y 8})
 
 (defn home-page []
-  [:h1 (str @(rf/subscribe [:equations]))])
+  [:div
+    [:h1 (str @(rf/subscribe [:equations]))]
+    [:button.button.is-medium.is-rounded.is-primary
+     {:on-click #(rf/dispatch [:set-key 0 :x (inc (:x @(rf/subscribe [:one-equation 0])))])}
+     "Add one to x"]])  ;; 0 is just the index of the 'first' equation in my equations vector
 
 (defn page []
   (if-let [page @(rf/subscribe [:common/page])]
